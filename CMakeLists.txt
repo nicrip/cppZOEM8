@@ -1,0 +1,13 @@
+# FILE(GLOB SRC *.cpp)
+
+cmake_minimum_required(VERSION 2.6)
+
+set (CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DUNIX -D_LINUX=1 -DCMDLINE=1")
+
+SET(SRC
+  cppZOEM8.cpp
+  magfield.cpp
+)
+ADD_EXECUTABLE(ZOEM8 ${SRC})
+TARGET_LINK_LIBRARIES(ZOEM8 -li2c)
