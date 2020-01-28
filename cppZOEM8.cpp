@@ -132,6 +132,7 @@ void ZOEM8::parse_response(std::string gps_line) {
       if(gps_components[1] != "" && gps_components[9] != "") {
         utc_time = stod(gps_components[1]);
         std::string date = gps_components[9];
+				utc_date = stoi(date);
         int hours = (int)floor(utc_time/1e4);
         int mins = (int)floor((utc_time - hours*1e4)/1e2);
         int secs = (int)floor(utc_time - (hours*1e4 + mins*1e2));
@@ -159,6 +160,7 @@ void ZOEM8::parse_response(std::string gps_line) {
         course_over_ground = stod(gps_components[8]);
       }
       mode = gps_components[12];
+			mode = mode.substr(0,1);
       if(mode == "N") mode = "invalid";
       else if(mode == "A") mode = "autonomous";
       else if(mode == "D") mode = "differential";
@@ -178,13 +180,7 @@ double ZOEM8::get_magnetic_declination(double lat, double lon) {
   int yy = lTime->tm_year + 1900;
   yy = yy - 2000; //year should only be two digits
   int model = 13; //model 13 is WMM 2020
-  std::cout << "Latitude: " << lat << std::endl;
-  std::cout << "Longitude: " << lon << std::endl;
-  std::cout << "Year: " << yy << std::endl;
-  std::cout << "Month: " << mm << std::endl;
-  std::cout << "Day: " << dd << std::endl;
   double declination = rad_to_deg(SGMagVar(deg_to_rad(lat),deg_to_rad(lon),h,yymmdd_to_julian_days(yy,mm,dd),model,field));
-  std::cout << "Magnetic Declination: " << declination << std::endl;
   return declination;
 }
 
@@ -194,5 +190,21 @@ int main(int argc, char *argv[])
   gps_device.init();
 	while(1) {
 		gps_device.read();
+
+		std::cout << "utc date: " << gps_device.utc_date << std::endl;
+		std::cout << "utc time: " << gps_device.utc_time << std::endl;
+		std::cout << "utc: " << std::fixed << gps_device.utc << std::endl;
+		std::cout << "status: " << gps_device.position_status << std::endl;
+		std::cout << "longitude: " << gps_device.longitude << std::endl;
+		std::cout << "latitude: " << gps_device.latitude << std::endl;
+		std::cout << "altitude: " << gps_device.altitude << std::endl;
+		std::cout << "mode: " << gps_device.mode << std::endl;
+		std::cout << "quality: " << gps_device.quality << std::endl;
+		std::cout << "number of satellites: " << gps_device.num_satellites << std::endl;
+		std::cout << "horizontal dilution of precision: " << gps_device.horizontal_dilution << std::endl;
+		std::cout << "speed-over-ground: " << gps_device.speed_over_ground << std::endl;
+		std::cout << "course-over-ground: " << gps_device.course_over_ground << std::endl;
+		std::cout << "magnetic declination: " << gps_device.magnetic_declination << std::endl << std::endl;
+		std::this_thread::sleep_for(milliseconds(50));
 	}
 }

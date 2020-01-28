@@ -19,14 +19,6 @@ public:
 
 	double get_magnetic_declination(double lat, double lon);
 
-private:
-  int bus;
-  I2CDevice device;
-	unsigned char buf[10];
-	unsigned char rbuf[10];
-	std::string response;
-	std::vector<std::string> gps_components;
-
 	int utc_date;
 	double utc_time;
 	double utc;
@@ -42,6 +34,14 @@ private:
 	double speed_over_ground;
 	double course_over_ground;
 	double magnetic_declination;
+
+private:
+  int bus;
+  I2CDevice device;
+	unsigned char buf[10];
+	unsigned char rbuf[10];
+	std::string response;
+	std::vector<std::string> gps_components;
 };
 
 #endif
