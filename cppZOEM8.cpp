@@ -187,12 +187,3 @@ double ZOEM8::get_magnetic_declination(double lat, double lon) {
   std::cout << "Magnetic Declination: " << declination << std::endl;
   return declination;
 }
-
-int main(int argc, char *argv[])
-{
-  ZOEM8 gps_device;
-  gps_device.init();
-	while(1) {
-		gps_device.read();
-	}
-}
