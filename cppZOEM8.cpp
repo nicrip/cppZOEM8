@@ -132,6 +132,7 @@ void ZOEM8::parse_response(std::string gps_line) {
       if(gps_components[1] != "" && gps_components[9] != "") {
         utc_time = stod(gps_components[1]);
         std::string date = gps_components[9];
+				utc_date = stoi(date);
         int hours = (int)floor(utc_time/1e4);
         int mins = (int)floor((utc_time - hours*1e4)/1e2);
         int secs = (int)floor(utc_time - (hours*1e4 + mins*1e2));
@@ -159,6 +160,7 @@ void ZOEM8::parse_response(std::string gps_line) {
         course_over_ground = stod(gps_components[8]);
       }
       mode = gps_components[12];
+			mode = mode.substr(0,1);
       if(mode == "N") mode = "invalid";
       else if(mode == "A") mode = "autonomous";
       else if(mode == "D") mode = "differential";
@@ -178,12 +180,6 @@ double ZOEM8::get_magnetic_declination(double lat, double lon) {
   int yy = lTime->tm_year + 1900;
   yy = yy - 2000; //year should only be two digits
   int model = 13; //model 13 is WMM 2020
-  std::cout << "Latitude: " << lat << std::endl;
-  std::cout << "Longitude: " << lon << std::endl;
-  std::cout << "Year: " << yy << std::endl;
-  std::cout << "Month: " << mm << std::endl;
-  std::cout << "Day: " << dd << std::endl;
   double declination = rad_to_deg(SGMagVar(deg_to_rad(lat),deg_to_rad(lon),h,yymmdd_to_julian_days(yy,mm,dd),model,field));
-  std::cout << "Magnetic Declination: " << declination << std::endl;
   return declination;
 }
